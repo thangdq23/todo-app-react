@@ -1,0 +1,11 @@
+{
+  "users": [
+    {
+      "email": "a@gmail.com",
+      "password": "$2a$10$BCovDN9yZ0wv2Rzvhar0l.5P8BzG6CHvBblHu5NFCYF7apNstpLTm",
+      "fullname": "Quyết Thắng",
+      "confirm_password": "111111",
+      "id": 1
+    }
+  ]
+}
