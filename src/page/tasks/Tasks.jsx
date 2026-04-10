@@ -1,226 +1,391 @@
-import React from "react";
+import { useEffect, useMemo, useState } from "react";
+import { useTasks } from "../../context/useTasks";
+
+const priorityStyles = {
+  High: "bg-error-container text-on-error-container",
+  Medium: "bg-secondary-container text-on-secondary-container",
+  Low: "bg-surface-container-highest text-outline",
+};
+
+const statusStyles = {
+  "To Do": "bg-primary text-on-primary",
+  "In Progress": "bg-tertiary text-on-tertiary",
+  Done: "bg-surface-container-highest text-outline",
+};
 
 const Tasks = () => {
-  return (
-    <main class="flex-1 ml-64 flex flex-col">
-      {/* <!-- TopNavBar --> */}
+  const {
+    filteredTasks,
+    loading,
+    error,
+    addTask,
+    updateTask,
+    deleteTask,
+    priorityFilter,
+    setPriorityFilter,
+    statusFilter,
+    setStatusFilter,
+    sortOrder,
+    setSortOrder,
+  } = useTasks();
 
-      {/* <!-- Content Area --> */}
-      <div class="px-12 py-10 max-w-7xl mt-20">
-        {/* <!-- Hero Header --> */}
-        <div class="mb-12 flex justify-between items-end">
+  const [showForm, setShowForm] = useState(false);
+  const [formState, setFormState] = useState({
+    title: "",
+    description: "",
+    dueDate: "",
+    priority: "Medium",
+    status: "To Do",
+  });
+  const [formError, setFormError] = useState("");
+  const [saving, setSaving] = useState(false);
+
+  const openForm = () => {
+    setFormError("");
+    setShowForm(true);
+  };
+
+  const closeForm = () => {
+    setShowForm(false);
+    setFormState({
+      title: "",
+      description: "",
+      dueDate: "",
+      priority: "Medium",
+      status: "To Do",
+    });
+  };
+
+  const handleChange = (event) => {
+    const { name, value } = event.target;
+    setFormState((prev) => ({ ...prev, [name]: value }));
+  };
+
+  const handleCreateTask = async (event) => {
+    event.preventDefault();
+    if (!formState.title.trim() || !formState.dueDate) {
+      setFormError("Tiêu đề và hạn chót là bắt buộc.");
+      return;
+    }
+
+    try {
+      setSaving(true);
+      await addTask({
+        ...formState,
+        description: formState.description.trim() || "Không có mô tả",
+      });
+      closeForm();
+    } finally {
+      setSaving(false);
+    }
+  };
+
+  const nextStatus = (current) => {
+    if (current === "To Do") return "In Progress";
+    if (current === "In Progress") return "Done";
+    return "To Do";
+  };
+
+  const handleToggleStatus = async (task) => {
+    await updateTask(task.id, { status: nextStatus(task.status) });
+  };
+
+  const handleDelete = async (taskId) => {
+    await deleteTask(taskId);
+  };
+
+  const emptyMessage = useMemo(() => {
+    if (loading) return "Đang tải nhiệm vụ...";
+    if (error) return error;
+    if (!filteredTasks.length) return "Không có nhiệm vụ phù hợp với bộ lọc.";
+    return null;
+  }, [loading, error, filteredTasks]);
+
+  // check task to user
+  useEffect(() => {
+    const user = JSON.parse(localStorage.getItem("user"));
+
+    if (!user) {
+      navigate("/");
+    }
+  }, []);
+
+  return (
+    <main className="flex-1 ml-64 flex flex-col">
+      <div className="px-12 py-10 max-w-7xl mt-20 space-y-8">
+        <div className="mb-6 flex flex-col gap-6 md:flex-row justify-between items-start md:items-end">
           <div>
-            <p class="text-primary font-bold text-xs uppercase tracking-[0.2em] mb-2">
+            <p className="text-primary font-bold text-xs uppercase tracking-[0.2em] mb-2">
               Editorial Workspace
             </p>
-            <h2 class="text-4xl font-extrabold tracking-tight text-on-surface">
+            <h2 className="text-4xl font-extrabold tracking-tight text-on-surface">
               Active Assignments
             </h2>
           </div>
-          <div class="flex items-center gap-4 p-1.5 rounded-xl">
-            <button className="w-full bg-blue-800 from-primary to-primary-container text-white py-3 px-4 rounded-xl font-bold flex items-center justify-center gap-2 shadow-lg shadow-primary/10 active:scale-95 transition-transform">
-              <span
-                className="material-symbols-outlined text-sm"
-                data-icon="add"
-              >
-                add
-              </span>
+          <div className="flex items-center gap-4 p-1.5 rounded-xl">
+            <button
+              type="button"
+              onClick={openForm}
+              className="bg-blue-800 text-white py-3 px-4 rounded-xl font-bold flex items-center justify-center gap-2 shadow-lg shadow-primary/10 active:scale-95 transition-transform"
+            >
+              <span className="material-symbols-outlined text-sm">add</span>
               <span>New Task</span>
             </button>
           </div>
         </div>
-        {/* <!-- Filters and Sorting Bento --> */}
-        <div class="grid grid-cols-12 gap-6 mb-12">
-          <div class="col-span-12 md:col-span-8 bg-surface-container-low rounded-xl p-6 flex flex-wrap gap-8 items-center">
-            <div class="space-y-1">
-              <p class="text-[10px] font-black text-outline uppercase tracking-widest">
+
+        {showForm && (
+          <section className="bg-surface-container-low rounded-3xl shadow-lg p-6 space-y-6">
+            <div className="flex items-center justify-between gap-4">
+              <div>
+                <p className="text-sm font-semibold text-on-surface">
+                  Tạo công việc mới
+                </p>
+                <p className="text-xs text-on-surface-variant">
+                  Lưu nhiệm vụ mới vào db.json.
+                </p>
+              </div>
+              <button
+                type="button"
+                className="text-sm text-primary font-semibold hover:underline"
+                onClick={closeForm}
+              >
+                Hủy
+              </button>
+            </div>
+            <form
+              className="grid gap-4 md:grid-cols-2"
+              onSubmit={handleCreateTask}
+            >
+              <div className="space-y-2 md:col-span-2">
+                <label
+                  className="text-sm font-semibold text-on-surface-variant"
+                  htmlFor="title"
+                >
+                  Tiêu đề
+                </label>
+                <input
+                  id="title"
+                  name="title"
+                  value={formState.title}
+                  onChange={handleChange}
+                  className="w-full rounded-lg border border-outline-variant bg-surface-container-high px-4 py-3 text-sm focus:ring-1 focus:ring-primary"
+                  placeholder="Enter task title"
+                />
+              </div>
+              <div className="space-y-2">
+                <label
+                  className="text-sm font-semibold text-on-surface-variant"
+                  htmlFor="dueDate"
+                >
+                  Hạn chót
+                </label>
+                <input
+                  id="dueDate"
+                  name="dueDate"
+                  type="date"
+                  value={formState.dueDate}
+                  onChange={handleChange}
+                  className="w-full rounded-lg border border-outline-variant bg-surface-container-high px-4 py-3 text-sm focus:ring-1 focus:ring-primary"
+                />
+              </div>
+              <div className="space-y-2">
+                <label
+                  className="text-sm font-semibold text-on-surface-variant"
+                  htmlFor="priority"
+                >
+                  Priority
+                </label>
+                <select
+                  id="priority"
+                  name="priority"
+                  value={formState.priority}
+                  onChange={handleChange}
+                  className="w-full rounded-lg border border-outline-variant bg-surface-container-high px-4 py-3 text-sm focus:ring-1 focus:ring-primary"
+                >
+                  <option>High</option>
+                  <option>Medium</option>
+                  <option>Low</option>
+                </select>
+              </div>
+              <div className="space-y-2">
+                <label
+                  className="text-sm font-semibold text-on-surface-variant"
+                  htmlFor="status"
+                >
+                  Status
+                </label>
+                <select
+                  id="status"
+                  name="status"
+                  value={formState.status}
+                  onChange={handleChange}
+                  className="w-full rounded-lg border border-outline-variant bg-surface-container-high px-4 py-3 text-sm focus:ring-1 focus:ring-primary"
+                >
+                  <option>To Do</option>
+                  <option>In Progress</option>
+                  <option>Done</option>
+                </select>
+              </div>
+              <div className="md:col-span-2 space-y-2">
+                <label
+                  className="text-sm font-semibold text-on-surface-variant"
+                  htmlFor="description"
+                >
+                  Mô tả
+                </label>
+                <textarea
+                  id="description"
+                  name="description"
+                  value={formState.description}
+                  onChange={handleChange}
+                  className="w-full rounded-lg border border-outline-variant bg-surface-container-high px-4 py-3 text-sm focus:ring-1 focus:ring-primary"
+                  rows="4"
+                  placeholder="Describe the task..."
+                />
+              </div>
+              {formError && (
+                <p className="md:col-span-2 text-sm text-error-container">
+                  {formError}
+                </p>
+              )}
+              <div className="md:col-span-2 flex flex-wrap gap-3 justify-end">
+                <button
+                  type="button"
+                  className="rounded-full border border-outline-variant px-5 py-3 text-sm font-semibold hover:bg-surface-container transition-colors"
+                  onClick={closeForm}
+                >
+                  Cancel
+                </button>
+                <button
+                  type="submit"
+                  disabled={saving}
+                  className="rounded-full bg-primary text-on-primary px-5 py-3 text-sm font-semibold shadow-lg shadow-primary/10 hover:bg-primary/90 transition-colors"
+                >
+                  {saving ? "Saving..." : "Save Task"}
+                </button>
+              </div>
+            </form>
+          </section>
+        )}
+
+        <div className="grid grid-cols-12 gap-6">
+          <div className="col-span-12 md:col-span-8 bg-surface-container-low rounded-xl p-6 flex flex-wrap gap-4 items-center">
+            <div className="space-y-1">
+              <p className="text-[10px] font-black text-outline uppercase tracking-widest">
                 Filter by Priority
               </p>
-              <div class="flex gap-2">
-                <span class="px-3 py-1 bg-surface-container-highest rounded-full text-[11px] font-bold text-tertiary-container cursor-pointer hover:bg-tertiary-fixed transition-colors border border-transparent">
-                  High
-                </span>
-                <span class="px-3 py-1 bg-surface-container-highest rounded-full text-[11px] font-bold text-on-secondary-container cursor-pointer hover:bg-secondary-container transition-colors border border-transparent">
-                  Medium
-                </span>
-                <span class="px-3 py-1 bg-surface-container-highest rounded-full text-[11px] font-bold text-on-surface-variant cursor-pointer hover:bg-surface-variant transition-colors border border-transparent">
-                  Low
-                </span>
+              <div className="flex flex-wrap gap-2">
+                {["All", "High", "Medium", "Low"].map((level) => (
+                  <button
+                    key={level}
+                    type="button"
+                    onClick={() => setPriorityFilter(level)}
+                    className={`px-3 py-1 rounded-full text-[11px] font-bold border ${priorityFilter === level ? "border-primary bg-primary text-on-primary" : "border-outline-variant bg-surface-container-highest text-on-surface-variant"} transition-colors`}
+                  >
+                    {level}
+                  </button>
+                ))}
               </div>
             </div>
-            <div class="h-8 w-[1px] bg-outline-variant/30"></div>
-            <div class="space-y-1">
-              <p class="text-[10px] font-black text-outline uppercase tracking-widest">
+            <div className="h-8 w-px bg-outline-variant/30" />
+            <div className="space-y-1">
+              <p className="text-[10px] font-black text-outline uppercase tracking-widest">
                 Filter by Status
               </p>
-              <div class="flex gap-2">
-                <span class="px-3 py-1 bg-primary text-on-primary rounded-full text-[11px] font-bold cursor-pointer">
-                  To Do
-                </span>
-                <span class="px-3 py-1 bg-surface-container-highest rounded-full text-[11px] font-bold text-on-surface-variant cursor-pointer hover:bg-surface-variant transition-colors">
-                  In Progress
-                </span>
-                <span class="px-3 py-1 bg-surface-container-highest rounded-full text-[11px] font-bold text-on-surface-variant cursor-pointer hover:bg-surface-variant transition-colors">
-                  Done
-                </span>
+              <div className="flex flex-wrap gap-2">
+                {["All", "To Do", "In Progress", "Done"].map((status) => (
+                  <button
+                    key={status}
+                    type="button"
+                    onClick={() => setStatusFilter(status)}
+                    className={`px-3 py-1 rounded-full text-[11px] font-bold border ${statusFilter === status ? "border-primary bg-primary text-on-primary" : "border-outline-variant bg-surface-container-highest text-on-surface-variant"} transition-colors`}
+                  >
+                    {status}
+                  </button>
+                ))}
               </div>
             </div>
           </div>
-          <div class="col-span-12 md:col-span-4 bg-surface-container-low rounded-xl p-6 flex flex-col justify-center">
-            <p class="text-[10px] font-black text-outline uppercase tracking-widest mb-2">
+          <div className="col-span-12 md:col-span-4 bg-surface-container-low rounded-xl p-6 flex flex-col justify-center">
+            <p className="text-[10px] font-black text-outline uppercase tracking-widest mb-2">
               Sort Order
             </p>
-            <div class="relative">
-              <select class="w-full bg-surface-container-highest border-none rounded-lg text-sm font-semibold py-2 px-4 appearance-none focus:ring-1 focus:ring-primary">
-                <option>Closest Due Date</option>
-                <option>Highest Priority</option>
-                <option>Alphabetical</option>
-              </select>
-              <span
-                class="material-symbols-outlined absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none text-on-surface-variant"
-                data-icon="expand_more"
-              >
-                expand_more
-              </span>
-            </div>
+            <select
+              value={sortOrder}
+              onChange={(event) => setSortOrder(event.target.value)}
+              className="w-full bg-surface-container-highest border-none rounded-lg text-sm font-semibold py-2 px-4 appearance-none focus:ring-1 focus:ring-primary"
+            >
+              <option>Closest Due Date</option>
+              <option>Highest Priority</option>
+              <option>Alphabetical</option>
+            </select>
           </div>
         </div>
-        {/* <!-- Task Grid --> */}
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-          {/* <!-- Task Card 1 (Urgent/High) --> */}
-          <div class="group bg-surface-container-lowest rounded-xl p-6 transition-all duration-300 hover:shadow-2xl hover:shadow-on-surface/5 flex flex-col border border-outline-variant/10 cursor-pointer">
-            <div class="flex justify-between items-start mb-6">
-              <span class="px-2.5 py-1 bg-error-container text-on-error-container text-[10px] font-black uppercase tracking-tighter rounded">
-                HIGH PRIORITY
-              </span>
-            </div>
-            <h3 class="text-xl font-bold mb-2 group-hover:text-primary transition-colors leading-tight">
-              Q4 Editorial Calendar Audit
-            </h3>
-            <p class="text-on-secondary-container text-sm line-clamp-2 mb-6">
-              Review all pending content for the next quarter. Ensure brand
-              alignment across all vertical channels...
-            </p>
-            <div class="mt-auto pt-6 flex items-center justify-between border-t border-surface-container">
-              <div class="flex items-center gap-2 text-on-surface-variant">
-                <span
-                  class="material-symbols-outlined text-sm"
-                  data-icon="calendar_month"
-                >
-                  calendar_month
-                </span>
-                <span class="text-xs font-medium">Oct 24, 2024</span>
-              </div>
-              <div class="flex items-center gap-2">
-                <div class="w-2 h-2 rounded-full bg-primary"></div>
-                <span class="text-xs font-bold text-primary uppercase">
-                  To Do
-                </span>
-              </div>
-            </div>
-          </div>
-          {/* <!-- Task Card 2 (In Progress) --> */}
-          <div class="group bg-surface-container-lowest rounded-xl p-6 transition-all duration-300 hover:shadow-2xl hover:shadow-on-surface/5 flex flex-col border border-outline-variant/10">
-            <div class="flex justify-between items-start mb-6">
-              <span class="px-2.5 py-1 bg-secondary-container text-on-secondary-container text-[10px] font-black uppercase tracking-tighter rounded">
-                MEDIUM
-              </span>
-            </div>
-            <h3 class="text-xl font-bold mb-2 group-hover:text-primary transition-colors leading-tight">
-              User Interview Synthesis
-            </h3>
-            <p class="text-on-secondary-container text-sm line-clamp-2 mb-6">
-              Compiling notes from 12 separate sessions regarding the new mobile
-              kinetic navigation system.
-            </p>
-            <div class="mt-auto pt-6 flex items-center justify-between border-t border-surface-container">
-              <div class="flex items-center gap-2 text-on-surface-variant">
-                <span
-                  class="material-symbols-outlined text-sm"
-                  data-icon="calendar_month"
-                >
-                  calendar_month
-                </span>
-                <span class="text-xs font-medium">Oct 26, 2024</span>
-              </div>
-              <div class="flex items-center gap-2">
-                <div class="w-2 h-2 rounded-full bg-tertiary"></div>
-                <span class="text-xs font-bold text-tertiary uppercase">
-                  In Progress
-                </span>
-              </div>
-            </div>
-          </div>
-          {/* <!-- Task Card 3 (Done) --> */}
-          <div class="group bg-surface-dim opacity-70 rounded-xl p-6 transition-all duration-300 flex flex-col">
-            <div class="flex justify-between items-start mb-6">
-              <span class="px-2.5 py-1 bg-surface-container-highest text-outline text-[10px] font-black uppercase tracking-tighter rounded">
-                LOW
-              </span>
-              <span
-                class="material-symbols-outlined text-outline"
-                data-icon="check_circle"
-                style={{ fontVariationSettings: "'FILL' 1;" }}
-              >
-                check_circle
-              </span>
-            </div>
-            <h3 class="text-xl font-bold mb-2 line-through text-outline leading-tight">
-              Sync Branding Assets
-            </h3>
-            <p class="text-outline text-sm line-clamp-2 mb-6">
-              Upload latest logo variations and typeface files to the shared
-              Kinetic Archive server.
-            </p>
-            <div class="mt-auto pt-6 flex items-center justify-between border-t border-outline-variant/30">
-              <div class="flex items-center gap-2 text-outline">
-                <span
-                  class="material-symbols-outlined text-sm"
-                  data-icon="calendar_month"
-                >
-                  calendar_month
-                </span>
-                <span class="text-xs font-medium">Oct 20, 2024</span>
-              </div>
-              <span class="text-[10px] font-black text-outline uppercase">
-                Completed
-              </span>
-            </div>
-          </div>
 
-          {/* <!-- Task Card 4 --> */}
-          <div class="group bg-surface-container-lowest rounded-xl p-6 transition-all duration-300 hover:shadow-2xl hover:shadow-on-surface/5 flex flex-col border border-outline-variant/10">
-            <div class="flex justify-between items-start mb-6">
-              <span class="px-2.5 py-1 bg-secondary-container text-on-secondary-container text-[10px] font-black uppercase tracking-tighter rounded">
-                MEDIUM
-              </span>
-            </div>
-            <h3 class="text-xl font-bold mb-2 group-hover:text-primary transition-colors leading-tight">
-              Newsletter Draft
-            </h3>
-            <p class="text-on-secondary-container text-sm line-clamp-2 mb-6">
-              Drafting the weekly 'Kinetic Flow' update for our 50k subscribers.
-              Focusing on focus-work.
-            </p>
-            <div class="mt-auto pt-6 flex items-center justify-between border-t border-surface-container">
-              <div class="flex items-center gap-2 text-on-surface-variant">
-                <span
-                  class="material-symbols-outlined text-sm"
-                  data-icon="calendar_month"
-                >
-                  calendar_month
-                </span>
-                <span class="text-xs font-medium">Oct 28, 2024</span>
-              </div>
-              <div class="flex items-center gap-2">
-                <div class="w-2 h-2 rounded-full bg-primary"></div>
-                <span class="text-xs font-bold text-primary uppercase">
-                  To Do
-                </span>
-              </div>
-            </div>
+        {emptyMessage ? (
+          <div className="rounded-3xl bg-surface-container-lowest border border-outline-variant p-10 text-center text-on-surface-variant">
+            {emptyMessage}
           </div>
-        </div>
+        ) : (
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            {filteredTasks.map((task) => (
+              <article
+                key={task.id}
+                className={`group rounded-xl p-6 transition-all duration-300 ${task.status === "Done" ? "bg-surface-dim opacity-90" : "bg-surface-container-lowest hover:shadow-2xl hover:shadow-on-surface/5"} border border-outline-variant/10 flex flex-col`}
+              >
+                <div className="flex justify-between items-start mb-6 gap-4">
+                  <span
+                    className={`px-2.5 py-1 text-[10px] font-black uppercase tracking-tighter rounded ${priorityStyles[task.priority] || "bg-surface-container-highest text-outline"}`}
+                  >
+                    {task.priority.toUpperCase()}
+                  </span>
+                  <span
+                    className={`px-2.5 py-1 text-[10px] font-black uppercase tracking-tighter rounded ${statusStyles[task.status] || "bg-surface-container-highest text-outline"}`}
+                  >
+                    {task.status}
+                  </span>
+                </div>
+                <h3
+                  className={`text-xl font-bold mb-2 leading-tight ${task.status === "Done" ? "line-through text-outline" : "group-hover:text-primary transition-colors"}`}
+                >
+                  {task.title}
+                </h3>
+                <p
+                  className={`text-sm mb-6 ${task.status === "Done" ? "text-outline" : "text-on-secondary-container"} line-clamp-3`}
+                >
+                  {task.description}
+                </p>
+                <div className="mt-auto pt-6 flex items-center justify-between border-t border-surface-container">
+                  <div className="flex items-center gap-2 text-on-surface-variant">
+                    <span className="material-symbols-outlined text-sm">
+                      calendar_month
+                    </span>
+                    <span className="text-xs font-medium">
+                      {new Date(task.dueDate).toLocaleDateString()}
+                    </span>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <button
+                      type="button"
+                      onClick={() => handleToggleStatus(task)}
+                      className="rounded-full bg-primary/10 text-primary px-3 py-1 text-[11px] font-semibold hover:bg-primary/20 transition-colors"
+                    >
+                      Next status
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => handleDelete(task.id)}
+                      className="rounded-full bg-error-container/10 text-error-container px-3 py-1 text-[11px] font-semibold hover:bg-error-container/20 transition-colors"
+                    >
+                      Delete
+                    </button>
+                  </div>
+                </div>
+              </article>
+            ))}
+          </div>
+        )}
       </div>
     </main>
   );

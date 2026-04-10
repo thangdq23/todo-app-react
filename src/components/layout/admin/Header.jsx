@@ -1,12 +1,19 @@
 import React from "react";
+import { useNavigate } from "react-router-dom";
 
 const Header = () => {
+  const navigate = useNavigate();
+
+  const handleLogout = () => {
+    localStorage.removeItem("user");
+    window.location.href = "/";
+  };
   return (
     <header className="fixed top-0 ml-64 w-[calc(100%-16rem)] h-20 flex justify-between items-center px-12 py-4 bg-slate-50/80 dark:bg-slate-900/80 backdrop-blur-xl z-10">
       <div className="flex items-center flex-1 max-w-md">
         <div className="w-full relative group">
           <span
-            className="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-outline text-lg"
+            className="material-symbols-outlined absolute left-4 top-8 -translate-y-1/2 text-outline text-lg"
             data-icon="search"
           >
             search
@@ -43,6 +50,12 @@ const Header = () => {
               src="https://lh3.googleusercontent.com/aida-public/AB6AXuBmcRW3T8Rnlmo5Q-yT0lHXB40mfSVUym11epiuOj6IE4xQZdo01OWXWXN0p31SNLkDs7imv3mcMCa0cREo28_qRIcqmGWtAtLbjknlw5xD4rEiQPBVVy5YS1LR3DYOKJR0gdgD1qBnJvBpaNgM0LyK_y4mIl1_iNH3PEi33XMozfCwJUklKmn-NvL-Eju1YYzS9ANVjWJm4ZCozN4mPeWdaIycs2xoOC-IeUTyOirCbTEye3Dy4zMctKDyeP-e0UqiwDo81vHbGA"
             />
           </div>
+          <button
+            onClick={handleLogout}
+            className="bg-blue-300 hover:bg-blue-600 text-white px-2 py-2 rounded-lg text-sm"
+          >
+            Đăng xuất
+          </button>
         </div>
       </div>
     </header>

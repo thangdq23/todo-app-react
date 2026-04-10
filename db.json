@@ -6,6 +6,69 @@
       "fullname": "Quyết Thắng",
       "confirm_password": "111111",
       "id": 1
+    },
+    {
+      "email": "abc@gmail.com",
+      "password": "$2a$10$79biS2ofVh9LsAEk.v5A6.S3nppTUtSOq3JetEDHoC5e.uv..zILq",
+      "fullname": "Nguyen Van A",
+      "confirm_password": "111111",
+      "id": 2
+    }
+  ],
+  "tasks": [
+    {
+      "id": 1,
+      "title": "Q4 Editorial Calendar Audit",
+      "description": "Review all pending content for the next quarter. Ensure brand alignment across all vertical channels.",
+      "priority": "High",
+      "status": "To Do",
+      "dueDate": "2024-10-24",
+      "userEmail": "a@gmail.com"
+    },
+    {
+      "id": 2,
+      "title": "User Interview Synthesis",
+      "description": "Compile notes from 12 separate sessions regarding the new mobile kinetic navigation system.",
+      "priority": "Medium",
+      "status": "In Progress",
+      "dueDate": "2024-10-26",
+      "userEmail": "a@gmail.com"
+    },
+    {
+      "id": 3,
+      "title": "Sync Branding Assets",
+      "description": "Upload latest logo variations and typeface files to the shared Kinetic Archive server.",
+      "priority": "Low",
+      "status": "Done",
+      "dueDate": "2024-10-20",
+      "userEmail": "a@gmail.com"
+    },
+    {
+      "id": 4,
+      "title": "Newsletter Draft",
+      "description": "Draft the weekly 'Kinetic Flow' update for our 50k subscribers, focusing on focus-work.",
+      "priority": "Medium",
+      "status": "To Do",
+      "dueDate": "2024-10-28",
+      "userEmail": "a@gmail.com"
+    },
+    {
+      "title": "cong viec 1",
+      "description": "viec lam 1",
+      "dueDate": "2026-04-10",
+      "priority": "High",
+      "status": "To Do",
+      "id": 5,
+      "userEmail": "a@gmail.com"
+    },
+    {
+      "title": "cong viec a",
+      "description": "viec a",
+      "dueDate": "2026-04-11",
+      "priority": "High",
+      "status": "In Progress",
+      "userEmail": "abc@gmail.com",
+      "id": 6
     }
   ]
 }

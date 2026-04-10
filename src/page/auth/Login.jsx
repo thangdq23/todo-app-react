@@ -25,12 +25,12 @@ const Login = () => {
     try {
       const res = await api.post("/login", data);
       localStorage.setItem("user", JSON.stringify(res.data.user));
-      localStorage.setItem("accessToken", res.data.accessToken);
-      nav("/dashboard");
+      window.location.href = "/dashboard";
     } catch (error) {
       toast.error(error.response.data || "Error!");
     }
   };
+
   return (
     <div className="bg-surface font-body text-on-surface antialiased overflow-hidden">
       <main className="flex min-h-screen">
@@ -95,14 +95,6 @@ const Login = () => {
         <section className="w-full lg:w-1/2 flex items-center justify-center p-6 md:p-12 lg:p-24 bg-surface">
           <div className="w-full max-w-md">
             <div className="mb-10">
-              {/* <div className="flex items-center gap-2 mb-8">
-                <div className="w-10 h-10 kinetic-gradient rounded-xl flex items-center justify-center font-black text-amber-50 tracking-tighter">
-                  App
-                </div>
-                <span className="text-lg font-black text-primary tracking-tighter">
-                  Task Management Application
-                </span>
-              </div> */}
               <h2 className="font-headline text-3xl font-extrabold text-on-surface tracking-tight mb-2">
                 Chào mừng
               </h2>
