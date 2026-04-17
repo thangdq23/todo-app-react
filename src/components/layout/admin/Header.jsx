@@ -11,19 +11,7 @@ const Header = () => {
   return (
     <header className="fixed top-0 ml-64 w-[calc(100%-16rem)] h-20 flex justify-between items-center px-12 py-4 bg-slate-50/80 dark:bg-slate-900/80 backdrop-blur-xl z-10">
       <div className="flex items-center flex-1 max-w-md">
-        <div className="w-full relative group">
-          <span
-            className="material-symbols-outlined absolute left-4 top-8 -translate-y-1/2 text-outline text-lg"
-            data-icon="search"
-          >
-            search
-          </span>
-          <input
-            className="w-full bg-surface-container-high border-none rounded-lg pl-12 pr-4 py-2 text-sm focus:ring-1 focus:ring-primary transition-all"
-            placeholder="Search archives..."
-            type="text"
-          />
-        </div>
+        
       </div>
       <div className="flex items-center gap-6">
         <div className="flex items-center gap-4">

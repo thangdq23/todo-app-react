@@ -1,79 +1,179 @@
-import React from "react";
+import React, { useMemo, useState } from "react";
+import { useTasks } from "../../context/useTasks";
+import { formatDateKey } from "../calendar/calendarUtils";
+import TaskDetailModal from "../tasks/TaskDetailModal";
+import DashboardStatCard from "./DashboardStatCard";
+import DashboardTaskCard from "./DashboardTaskCard";
+import ProjectProgressList from "./ProjectProgressList";
+import { Link } from "react-router-dom";
 
 const Dashboard = () => {
+  const {
+    tasks = [],
+    projects = [],
+    loading,
+    error,
+    updateTask,
+    deleteTask,
+  } = useTasks();
+  const [selectedTask, setSelectedTask] = useState(null);
+  const [showDetail, setShowDetail] = useState(false);
+  const today = new Date();
+  const todayKey = formatDateKey(today);
+
+  const stats = useMemo(() => {
+    const totalTasks = tasks.length;
+    const completedTasks = tasks.filter(
+      (task) => task.status === "Done",
+    ).length;
+    const inProgressTasks = tasks.filter(
+      (task) => task.status === "In Progress",
+    ).length;
+    const currentMonthTasks = tasks.filter((task) => {
+      if (!task.dueDate) return false;
+      const date = new Date(task.dueDate);
+      return (
+        date.getMonth() === today.getMonth() &&
+        date.getFullYear() === today.getFullYear()
+      );
+    }).length;
+
+    return {
+      totalTasks,
+      completedTasks,
+      inProgressTasks,
+      currentMonthTasks,
+    };
+  }, [tasks, today]);
+
+  const todaysTasks = useMemo(() => {
+    const dueToday = tasks.filter(
+      (task) => task.dueDate === todayKey && task.status !== "Done",
+    );
+
+    const activeTasks = tasks.filter((task) => task.status !== "Done");
+    const chosenTasks = dueToday.length > 0 ? dueToday : activeTasks;
+
+    return chosenTasks.map((task) => ({
+      ...task,
+      projectName:
+        projects.find((project) => project.id === task.projectID)?.name ||
+        "Chung",
+    }));
+  }, [tasks, todayKey, projects]);
+
+  const weeklyActivity = useMemo(() => {
+    const weekStart = new Date(today);
+    weekStart.setDate(today.getDate() - 6);
+
+    return Array.from({ length: 7 }, (_, index) => {
+      const day = new Date(weekStart);
+      day.setDate(weekStart.getDate() + index);
+      return {
+        key: formatDateKey(day),
+        label: day.toLocaleDateString("en-US", { weekday: "short" }),
+        count: tasks.filter((task) => task.dueDate === formatDateKey(day))
+          .length,
+      };
+    });
+  }, [tasks, today]);
+
+  const archiveSegments = useMemo(() => {
+    const segmentProjects = [...projects];
+
+    const unassignedTasks = tasks.filter(
+      (task) => !projects.some((project) => project.id === task.projectID),
+    );
+
+    if (unassignedTasks.length > 0) {
+      segmentProjects.push({ id: 0, name: "Chung" });
+    }
+
+    return segmentProjects
+      .map((project) => {
+        const projectTasks = tasks.filter(
+          (task) =>
+            task.projectID === project.id ||
+            (project.id === 0 &&
+              !projects.some((proj) => proj.id === task.projectID)),
+        );
+        const completed = projectTasks.filter(
+          (task) => task.status === "Done",
+        ).length;
+        const progress = projectTasks.length
+          ? Math.round((completed / projectTasks.length) * 100)
+          : 0;
+
+        return {
+          id: project.id,
+          title: project.name,
+          progress,
+          color:
+            progress >= 80
+              ? "bg-tertiary"
+              : progress >= 50
+                ? "bg-primary"
+                : "bg-secondary",
+        };
+      })
+      .sort((a, b) => b.progress - a.progress);
+  }, [projects, tasks]);
+
+  if (loading) {
+    return (
+      <div className="ml-64 min-h-screen mt-16">
+        <div className="p-10 max-w-7xl mx-auto rounded-3xl bg-surface-container-lowest text-center text-on-surface-variant">
+          Đang tải dashboard...
+        </div>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="ml-64 min-h-screen mt-16">
+        <div className="p-10 max-w-7xl mx-auto rounded-3xl bg-surface-container-lowest text-center text-error-container">
+          {error}
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="bg-surface font-body text-on-surface">
       <main className="ml-64 pt-28 pb-12 px-12 min-h-screen">
-        {/* <!-- Greeting Section --> */}
         <section className="mb-12">
-          <span className="Inter uppercase text-xs font-bold tracking-[0.2em] text-primary mb-2 block">
+          <span className="uppercase text-xs font-bold tracking-[0.2em] text-primary mb-2 block">
             Daily Briefing
           </span>
           <h2 className="text-4xl font-extrabold font-headline tracking-tight text-on-surface">
-            Hi, Julian! Let's get things done today.
+            Chào mừng trở lại! Hôm nay bạn có thể hoàn thành những việc gì?
           </h2>
         </section>
-        {/* <!-- Bento Grid Layout --> */}
+
         <div className="grid grid-cols-12 gap-8">
-          {/* <!-- Quick Stats (Glassmorphism Row) --> */}
           <div className="col-span-12 grid grid-cols-1 md:grid-cols-3 gap-6">
-            <div className="bg-surface-container-lowest p-6 rounded-xl shadow-sm border border-outline-variant/15 flex flex-col justify-between">
-              <div className="flex justify-between items-start mb-4">
-                <span className="text-[10px] Inter uppercase font-bold text-on-surface-variant tracking-widest">
-                  Total Archive
-                </span>
-                <span
-                  className="material-symbols-outlined text-primary/40"
-                  data-icon="inventory_2"
-                >
-                  inventory_2
-                </span>
-              </div>
-              <div>
-                <p className="text-3xl font-extrabold font-headline">42</p>
-                <p className="text-xs text-on-surface-variant mt-1">
-                  Managed entries this month
-                </p>
-              </div>
-            </div>
-            <div className="bg-surface-container-lowest p-6 rounded-xl shadow-sm border border-outline-variant/15 flex flex-col justify-between">
-              <div className="flex justify-between items-start mb-4">
-                <span className="text-[10px] Inter uppercase font-bold text-on-surface-variant tracking-widest">
-                  Completed
-                </span>
-                <span
-                  className="material-symbols-outlined text-primary"
-                  data-icon="task_alt"
-                >
-                  task_alt
-                </span>
-              </div>
-              <div>
-                <p className="text-3xl font-extrabold font-headline">28</p>
-                <p className="text-xs text-on-surface-variant mt-1">
-                  Successfully published
-                </p>
-              </div>
-            </div>
-            <div className="bg-primary-container p-6 rounded-xl shadow-lg shadow-primary/5 flex flex-col justify-between">
-              <div className="flex justify-between items-start mb-4 text-on-primary-container">
-                <span className="text-[10px] Inter uppercase font-bold tracking-widest">
-                  In Progress
-                </span>
-                <span
-                  className="material-symbols-outlined"
-                  data-icon="edit_note"
-                >
-                  edit_note
-                </span>
-              </div>
-              <div className="text-white">
-                <p className="text-3xl font-extrabold font-headline">14</p>
-                <p className="text-xs opacity-80 mt-1">Currently in editing</p>
-              </div>
-            </div>
+            <DashboardStatCard
+              title="Total Tasks"
+              value={stats.totalTasks}
+              subtitle="Nhiệm vụ tổng"
+              icon="inventory_2"
+            />
+            <DashboardStatCard
+              title="Completed"
+              value={stats.completedTasks}
+              subtitle="Hoàn thành"
+              icon="task_alt"
+            />
+            <DashboardStatCard
+              title="In Progress"
+              value={stats.inProgressTasks}
+              subtitle="Đang thực hiện"
+              icon="edit_note"
+              accent
+            />
           </div>
-          {/* <!-- Today's Tasks (Main Editorial List) --> */}
+
           <div className="col-span-12 lg:col-span-8">
             <div className="mb-6 flex justify-between items-end">
               <div>
@@ -81,179 +181,55 @@ const Dashboard = () => {
                   Today's Tasks
                 </h3>
                 <p className="text-xs text-on-surface-variant">
-                  Asymmetric focus for maximum clarity
+                  Focus on the most important work for today.
                 </p>
               </div>
-              <button className="text-xs font-bold text-primary hover:underline">
+              <Link
+                to="/dashboard/task"
+                className="text-xs font-bold text-primary hover:underline"
+              >
                 View All
-              </button>
+              </Link>
             </div>
-            <div className="space-y-3">
-              {/* <!-- Task Item 1 --> */}
-              <div className="group flex items-center bg-surface-container-lowest p-5 rounded-xl border border-transparent hover:border-outline-variant/30 transition-all hover:translate-x-1">
-                <div className="w-6 h-6 rounded-full border-2 border-outline-variant flex items-center justify-center mr-6 group-hover:border-primary transition-colors cursor-pointer"></div>
-                <div className="flex-1">
-                  <h4 className="font-bold text-on-surface">
-                    Finalize Q4 Content Strategy
-                  </h4>
-                  <div className="flex gap-4 mt-1">
-                    <span className="flex items-center gap-1 text-[10px] font-medium text-tertiary">
-                      <span
-                        className="material-symbols-outlined text-xs"
-                        data-icon="priority_high"
-                      >
-                        priority_high
-                      </span>{" "}
-                      High Priority
-                    </span>
-                    <span className="flex items-center gap-1 text-[10px] font-medium text-on-surface-variant">
-                      <span
-                        className="material-symbols-outlined text-xs"
-                        data-icon="schedule"
-                      >
-                        schedule
-                      </span>{" "}
-                      10:30 AM
-                    </span>
-                  </div>
+            <div className="space-y-3 max-h-[38rem] overflow-y-auto pr-2">
+              {todaysTasks.length > 0 ? (
+                todaysTasks.map((task) => (
+                  <DashboardTaskCard
+                    key={task.id}
+                    task={task}
+                    projectName={task.projectName}
+                    onClick={() => {
+                      setSelectedTask(task);
+                      setShowDetail(true);
+                    }}
+                  />
+                ))
+              ) : (
+                <div className="rounded-3xl bg-surface-container-lowest p-8 text-center text-on-surface-variant">
+                  Không có nhiệm vụ nào cho hôm nay.
                 </div>
-                <div className="opacity-0 group-hover:opacity-100 transition-opacity">
-                  <span
-                    className="material-symbols-outlined text-outline-variant hover:text-primary cursor-pointer"
-                    data-icon="more_horiz"
-                  >
-                    more_horiz
-                  </span>
-                </div>
-              </div>
-              {/* <!-- Task Item 2 --> */}
-              <div className="group flex items-center bg-surface-container-lowest p-5 rounded-xl border border-transparent hover:border-outline-variant/30 transition-all hover:translate-x-1">
-                <div className="w-6 h-6 rounded-full border-2 border-outline-variant flex items-center justify-center mr-6 group-hover:border-primary transition-colors cursor-pointer"></div>
-                <div className="flex-1">
-                  <h4 className="font-bold text-on-surface">
-                    Review Weekly Newsletter Draft
-                  </h4>
-                  <div className="flex gap-4 mt-1">
-                    <span className="flex items-center gap-1 text-[10px] font-medium text-primary">
-                      <span
-                        className="material-symbols-outlined text-xs"
-                        data-icon="folder"
-                      >
-                        folder
-                      </span>{" "}
-                      Editorial
-                    </span>
-                    <span className="flex items-center gap-1 text-[10px] font-medium text-on-surface-variant">
-                      <span
-                        className="material-symbols-outlined text-xs"
-                        data-icon="schedule"
-                      >
-                        schedule
-                      </span>{" "}
-                      02:00 PM
-                    </span>
-                  </div>
-                </div>
-                <div className="opacity-0 group-hover:opacity-100 transition-opacity">
-                  <span
-                    className="material-symbols-outlined text-outline-variant hover:text-primary cursor-pointer"
-                    data-icon="more_horiz"
-                  >
-                    more_horiz
-                  </span>
-                </div>
-              </div>
-              {/* <!-- Task Item 3 (Completed) --> */}
-              <div className="group flex items-center bg-surface-dim/30 p-5 rounded-xl border border-transparent transition-all grayscale opacity-60">
-                <div className="w-6 h-6 rounded-full bg-primary flex items-center justify-center mr-6">
-                  <span
-                    className="material-symbols-outlined text-white text-[16px]"
-                    data-icon="check"
-                    style={{ fontVariationSettings: "'FILL' 0, 'wght' 700" }}
-                  >
-                    check
-                  </span>
-                </div>
-                <div className="flex-1">
-                  <h4 className="font-bold text-on-surface line-through">
-                    Standup with Design Team
-                  </h4>
-                  <p className="text-[10px] text-on-surface-variant mt-1">
-                    Completed at 09:15 AM
-                  </p>
-                </div>
-              </div>
+              )}
             </div>
           </div>
-          {/* <!-- Side Bento Area --> */}
+          {showDetail && selectedTask && (
+            <TaskDetailModal
+              isOpen={showDetail}
+              task={selectedTask}
+              onClose={() => setShowDetail(false)}
+              onUpdate={async (taskId, payload) => {
+                const updatedTask = await updateTask(taskId, payload);
+                setSelectedTask(updatedTask);
+              }}
+              onDelete={async (taskId) => {
+                await deleteTask(taskId);
+                setShowDetail(false);
+              }}
+            />
+          )}
+
           <div className="col-span-12 lg:col-span-4 space-y-8">
-            {/* <!-- Weekly Activity Chart --> */}
-            <div className="bg-surface-container-lowest p-8 rounded-xl shadow-sm border border-outline-variant/15">
-              <h3 className="text-lg font-bold font-headline mb-6">
-                Weekly Activity
-              </h3>
-              <div className="flex items-end justify-between h-32 gap-2 mb-4">
-                <div className="w-full bg-surface-container-high rounded-t-lg h-[40%] hover:bg-primary-container transition-colors"></div>
-                <div className="w-full bg-surface-container-high rounded-t-lg h-[65%] hover:bg-primary-container transition-colors"></div>
-                <div className="w-full bg-primary rounded-t-lg h-[90%]"></div>
-                <div className="w-full bg-surface-container-high rounded-t-lg h-[30%] hover:bg-primary-container transition-colors"></div>
-                <div className="w-full bg-surface-container-high rounded-t-lg h-[55%] hover:bg-primary-container transition-colors"></div>
-                <div className="w-full bg-surface-container-high rounded-t-lg h-[75%] hover:bg-primary-container transition-colors"></div>
-                <div className="w-full bg-surface-container-high rounded-t-lg h-[45%] hover:bg-primary-container transition-colors"></div>
-              </div>
-              <div className="flex justify-between text-[10px] Inter uppercase font-bold text-outline">
-                <span>M</span>
-                <span>T</span>
-                <span>W</span>
-                <span>T</span>
-                <span>F</span>
-                <span>S</span>
-                <span>S</span>
-              </div>
-            </div>
-            {/* <!-- Categories --> */}
-            <div className="bg-surface-container-low p-8 rounded-xl border border-outline-variant/10">
-              <h3 className="text-lg font-bold font-headline mb-6">
-                Archive Segments
-              </h3>
-              <div className="space-y-6">
-                <div>
-                  <div className="flex justify-between text-xs font-bold mb-2">
-                    <span>Project Apollo</span>
-                    <span>75%</span>
-                  </div>
-                  <div className="w-full h-1.5 bg-surface-variant rounded-full overflow-hidden">
-                    <div
-                      className="h-full bg-primary rounded-full"
-                      style={{ width: "75%" }}
-                    ></div>
-                  </div>
-                </div>
-                <div>
-                  <div className="flex justify-between text-xs font-bold mb-2">
-                    <span>Q4 Editorial</span>
-                    <span>40%</span>
-                  </div>
-                  <div className="w-full h-1.5 bg-surface-variant rounded-full overflow-hidden">
-                    <div
-                      className="h-full bg-primary rounded-full"
-                      style={{ width: "40%" }}
-                    ></div>
-                  </div>
-                </div>
-                <div>
-                  <div className="flex justify-between text-xs font-bold mb-2">
-                    <span>Brand Guidelines</span>
-                    <span>92%</span>
-                  </div>
-                  <div className="w-full h-1.5 bg-surface-variant rounded-full overflow-hidden">
-                    <div
-                      className="h-full bg-tertiary rounded-full"
-                      style={{ width: "92%" }}
-                    ></div>
-                  </div>
-                </div>
-              </div>
+            <div className="max-h-[38rem] overflow-y-auto pr-2">
+              <ProjectProgressList segments={archiveSegments} />
             </div>
           </div>
         </div>

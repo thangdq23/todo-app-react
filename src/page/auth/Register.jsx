@@ -88,7 +88,7 @@ const Register = () => {
                     person
                   </span>
                   <input
-                    className="w-full pl-10 pr-4 py-3.5 bg-surface-container-high border-none rounded-lg box-border focus:outline focus:outline-2 focus:outline-primary transition-all text-on-surface placeholder:text-outline/50"
+                    className="w-full pl-10 pr-4 py-3.5 bg-surface-container-high border-none rounded-lg box-border focus:outline-2 focus:outline-primary transition-all text-on-surface placeholder:text-outline/50"
                     id="name"
                     placeholder="Nguyễn Văn A"
                     type="text"
@@ -116,7 +116,7 @@ const Register = () => {
                     mail
                   </span>
                   <input
-                    className="w-full pl-10 pr-4 py-3.5 bg-surface-container-high border-none rounded-lg box-border focus:outline focus:outline-2 focus:outline-primary transition-all text-on-surface placeholder:text-outline/50"
+                    className="w-full pl-10 pr-4 py-3.5 bg-surface-container-high border-none rounded-lg box-border  focus:outline-2 focus:outline-primary transition-all text-on-surface placeholder:text-outline/50"
                     id="email"
                     placeholder="example@gmail.com"
                     type="email"
@@ -144,7 +144,7 @@ const Register = () => {
                     lock
                   </span>
                   <input
-                    className="w-full pl-10 pr-4 py-3.5 bg-surface-container-high border-none rounded-lg box-border focus:outline focus:outline-2 focus:outline-primary transition-all text-on-surface placeholder:text-outline/50"
+                    className="w-full pl-10 pr-4 py-3.5 bg-surface-container-high border-none rounded-lg box-border  focus:outline-2 focus:outline-primary transition-all text-on-surface placeholder:text-outline/50"
                     id="password"
                     placeholder="••••••••"
                     type="password"
@@ -172,7 +172,7 @@ const Register = () => {
                     verified_user
                   </span>
                   <input
-                    className="w-full pl-10 pr-4 py-3.5 bg-surface-container-high border-none rounded-lg box-border focus:outline focus:outline-2 focus:outline-primary transition-all text-on-surface placeholder:text-outline/50"
+                    className="w-full pl-10 pr-4 py-3.5 bg-surface-container-high border-none rounded-lg box-border  focus:outline-2 focus:outline-primary transition-all text-on-surface placeholder:text-outline/50"
                     id="confirm_password"
                     placeholder="••••••••"
                     type="password"

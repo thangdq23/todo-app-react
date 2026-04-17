@@ -20,6 +20,9 @@ const SideNavBar = () => {
         <NavItem to="/dashboard/task" icon="checklist">
           Tasks
         </NavItem>
+        <NavItem to="/dashboard/projects" icon="folder_open">
+          Projects
+        </NavItem>
         <NavItem to="/dashboard/calendar" icon="calendar_today">
           Calendar
         </NavItem>
@@ -28,12 +31,6 @@ const SideNavBar = () => {
         </NavItem>
       </nav>
       <div className="mt-auto space-y-4 pr-4">
-        <button className="w-full bg-gradient-to-br from-primary to-primary-container text-white py-3 px-4 rounded-xl font-bold flex items-center justify-center gap-2 shadow-lg shadow-primary/10 active:scale-95 transition-transform">
-          <span className="material-symbols-outlined text-sm" data-icon="add">
-            add
-          </span>
-          <span>New Task</span>
-        </button>
         <div className="pt-6 border-t border-slate-200/30 space-y-2">
           <a
             className="flex items-center gap-3 px-4 text-slate-400 hover:text-blue-600 transition-colors"

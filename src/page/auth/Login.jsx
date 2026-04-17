@@ -24,6 +24,7 @@ const Login = () => {
   const onSubmit = async (data) => {
     try {
       const res = await api.post("/login", data);
+      localStorage.setItem("token", res.data.accessToken);
       localStorage.setItem("user", JSON.stringify(res.data.user));
       window.location.href = "/dashboard";
     } catch (error) {
