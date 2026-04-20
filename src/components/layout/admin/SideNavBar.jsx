@@ -7,7 +7,7 @@ const SideNavBar = () => {
     <aside className="h-full w-64 fixed left-0 top-0 bg-slate-50 dark:bg-slate-900 flex flex-col py-8 pl-8 pr-4">
       <div className="mb-10">
         <h1 className="text-xl font-bold tracking-tight text-blue-700 dark:text-blue-400 font-headline">
-          Velocity Flux
+          TaskFlow
         </h1>
         <p className="text-[10px] Inter uppercase tracking-widest text-slate-400 mt-1">
           Kho lưu trữ

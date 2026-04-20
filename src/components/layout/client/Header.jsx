@@ -7,7 +7,7 @@ const Header = () => {
     <header className="w-full top-0 sticky bg-[#f7f9fb] dark:bg-slate-950 z-50">
       <div className="flex justify-between items-center w-full px-8 py-4 max-w-7xl mx-auto">
         <div className="text-2xl font-extrabold tracking-tighter text-[#0052CC] dark:text-blue-500 font-headline">
-          Velocity Flux
+          TaskFlow
         </div>
         <nav className="hidden md:flex items-center gap-8 font-['Manrope'] font-bold text-sm tracking-tight">
           <a

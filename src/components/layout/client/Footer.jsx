@@ -6,10 +6,10 @@ const Footer = () => {
       <div className="w-full py-12 px-8 flex flex-col md:flex-row justify-between items-center gap-6 border-t border-slate-200/15 dark:border-slate-800/15 max-w-7xl mx-auto">
         <div className="flex flex-col items-center md:items-start gap-2">
           <div className="font-['Manrope'] font-black text-[#0052CC] dark:text-blue-500 text-xl">
-            Velocity Flux
+            TaskFlow
           </div>
           <div className="text-xs text-slate-500 dark:text-slate-400">
-            © 2026 Velocity Flux. The Kinetic Archive.
+            © 2026 TaskFlow. The Kinetic Archive.
           </div>
         </div>
         <nav className="flex flex-wrap justify-center gap-6">

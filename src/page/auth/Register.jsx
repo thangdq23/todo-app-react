@@ -45,7 +45,7 @@ const Register = () => {
             Welcome
           </div>
           <div className="text-[10px] uppercase tracking-widest font-headline text-[#44474e] dark:text-[#c4c6cf]">
-            Velocity Flux
+            TaskFlow
           </div>
         </div>
         <nav className="flex flex-col gap-2">

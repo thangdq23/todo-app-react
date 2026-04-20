@@ -278,9 +278,9 @@ const LandingPage = () => {
               </span>
             </div>
             <blockquote className="font-headline text-2xl md:text-3xl font-bold italic text-on-surface leading-tight mb-10">
-              "Velocity Flux đã thay đổi hoàn toàn cách chúng tôi làm việc. Đây
-              không chỉ là một công cụ quản lý nhiệm vụ mà còn là một môi trường
-              hỗ trợ sáng tạo."
+              "TaskFlow đã thay đổi hoàn toàn cách chúng tôi làm việc. Đây không
+              chỉ là một công cụ quản lý nhiệm vụ mà còn là một môi trường hỗ
+              trợ sáng tạo."
             </blockquote>
             <div className="flex flex-col items-center">
               <div className="w-16 h-16 rounded-full overflow-hidden mb-4 border-2 border-primary-fixed">

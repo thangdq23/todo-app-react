@@ -45,7 +45,7 @@ const Login = () => {
           <div className="relative z-10 p-16 max-w-xl">
             <div className="mb-12">
               <span className="font-headline text-on-primary-container bg-primary-container/20 px-4 py-1.5 rounded-full text-sm font-bold tracking-widest uppercase mb-6 inline-block">
-                Velocity Flux
+                TaskFlow
               </span>
               <h1 className="font-headline text-5xl font-extrabold text-white tracking-tighter leading-tight mb-6">
                 Biến đổi cách bạn <br />
