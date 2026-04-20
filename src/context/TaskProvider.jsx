@@ -1,67 +1,69 @@
 import { useEffect, useMemo, useState } from "react";
-import axios from "axios";
 import { TaskContext } from "./taskContext";
-
-const API_URL = import.meta.env.VITE_API_URL || "http://localhost:3000";
+import {
+  initialTaskState,
+  createSetter,
+  createStateUpdater,
+} from "./taskState";
+import {
+  fetchTasksForUser,
+  fetchProjectsForUser,
+  createTaskForUser,
+  updateTaskById,
+  deleteTaskById,
+  createProjectForUser,
+  updateProjectById,
+  deleteProjectById,
+} from "./taskApi";
 
 export const TaskProvider = ({ children }) => {
-  const [tasks, setTasks] = useState([]);
-  const [projects, setProjects] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [loadingProjects, setLoadingProjects] = useState(true);
-  const [error, setError] = useState(null);
-  const [priorityFilter, setPriorityFilter] = useState("All");
-  const [statusFilter, setStatusFilter] = useState("All");
-  const [projectFilter, setProjectFilter] = useState("All");
-  const [searchTerm, setSearchTerm] = useState("");
-  const [sortOrder, setSortOrder] = useState("Creation Date");
+  const [state, setState] = useState(initialTaskState);
 
-  const getCurrentUser = () => {
-    return JSON.parse(localStorage.getItem("user"));
-  };
+  const {
+    tasks,
+    projects,
+    loading,
+    loadingProjects,
+    error,
+    priorityFilter,
+    statusFilter,
+    projectFilter,
+    searchTerm,
+    sortOrder,
+  } = state;
+
+  const updateState = createStateUpdater(setState);
+  const setPriorityFilter = createSetter(setState)("priorityFilter");
+  const setStatusFilter = createSetter(setState)("statusFilter");
+  const setProjectFilter = createSetter(setState)("projectFilter");
+  const setSearchTerm = createSetter(setState)("searchTerm");
+  const setSortOrder = createSetter(setState)("sortOrder");
 
   const fetchTasks = async () => {
     try {
-      setLoading(true);
-      setError(null);
-
-      const user = getCurrentUser();
-      if (!user) {
-        setTasks([]);
-        return;
-      }
-
-      const response = await axios.get(
-        `${API_URL}/tasks?userEmail=${user.email}`,
-      );
-
-      setTasks(response.data || []);
+      updateState({ loading: true, error: null });
+      const tasksData = await fetchTasksForUser();
+      updateState({ tasks: tasksData });
     } catch (err) {
-      setError("Không thể tải danh sách công việc. Vui lòng thử lại.");
+      updateState({
+        error: "Không thể tải danh sách công việc. Vui lòng thử lại.",
+      });
     } finally {
-      setLoading(false);
+      updateState({ loading: false });
     }
   };
 
   const fetchProjects = async () => {
     try {
-      setLoadingProjects(true);
-      setError(null);
-
-      const user = getCurrentUser();
-      if (!user) {
-        setProjects([]);
-        return;
-      }
-
-      const response = await axios.get(
-        `${API_URL}/projects?userEmail=${user.email}`,
-      );
-      setProjects(response.data || []);
+      updateState({ loadingProjects: true, error: null });
+      const projectData = await fetchProjectsForUser();
+      updateState({ projects: projectData });
     } catch (err) {
-      setError("Không thể tải danh sách project. Vui lòng thử lại.");
+      updateState({
+        error: "Không thể tải danh sách project. Vui lòng thử lại.",
+      });
     } finally {
-      setLoadingProjects(false);
+      updateState({ loadingProjects: false });
     }
   };
 
@@ -72,45 +74,38 @@ export const TaskProvider = ({ children }) => {
 
   const addTask = async (task) => {
     try {
-      const user = getCurrentUser();
-
-      const newTask = {
-        ...task,
-        userEmail: user.email,
-      };
-
-      const response = await axios.post(`${API_URL}/tasks`, newTask);
-
-      setTasks((prev) => [...prev, response.data]);
-      return response.data;
+      const response = await createTaskForUser(task);
+      setState((prev) => ({ ...prev, tasks: [...prev.tasks, response] }));
+      return response;
     } catch (err) {
-      setError("Không thể tạo công việc mới. Vui lòng thử lại.");
+      updateState({ error: "Không thể tạo công việc mới. Vui lòng thử lại." });
       throw err;
     }
   };
 
   const updateTask = async (taskId, updates) => {
     try {
-      const response = await axios.patch(`${API_URL}/tasks/${taskId}`, updates);
-
-      setTasks((prev) =>
-        prev.map((task) => (task.id === taskId ? response.data : task)),
-      );
-
-      return response.data;
+      const response = await updateTaskById(taskId, updates);
+      setState((prev) => ({
+        ...prev,
+        tasks: prev.tasks.map((task) => (task.id === taskId ? response : task)),
+      }));
+      return response;
     } catch (err) {
-      setError("Không thể cập nhật công việc. Vui lòng thử lại.");
+      updateState({ error: "Không thể cập nhật công việc. Vui lòng thử lại." });
       throw err;
     }
   };
 
   const deleteTask = async (taskId) => {
     try {
-      await axios.delete(`${API_URL}/tasks/${taskId}`);
-
-      setTasks((prev) => prev.filter((task) => task.id !== taskId));
+      await deleteTaskById(taskId);
+      setState((prev) => ({
+        ...prev,
+        tasks: prev.tasks.filter((task) => task.id !== taskId),
+      }));
     } catch (err) {
-      setError("Không thể xóa công việc. Vui lòng thử lại.");
+      updateState({ error: "Không thể xóa công việc. Vui lòng thử lại." });
       throw err;
     }
   };
@@ -172,44 +167,43 @@ export const TaskProvider = ({ children }) => {
 
   const addProject = async (project) => {
     try {
-      const user = getCurrentUser();
-      const response = await axios.post(`${API_URL}/projects`, {
-        ...project,
-        userEmail: user?.email,
-      });
-      setProjects((prev) => [...prev, response.data]);
-      return response.data;
+      const response = await createProjectForUser(project);
+      setState((prev) => ({
+        ...prev,
+        projects: [...prev.projects, response],
+      }));
+      return response;
     } catch (err) {
-      setError("Không thể tạo project mới. Vui lòng thử lại.");
+      updateState({ error: "Không thể tạo project mới. Vui lòng thử lại." });
       throw err;
     }
   };
 
   const updateProject = async (projectId, updates) => {
     try {
-      const user = getCurrentUser();
-      const response = await axios.patch(`${API_URL}/projects/${projectId}`, {
-        ...updates,
-        userEmail: user?.email,
-      });
-      setProjects((prev) =>
-        prev.map((project) =>
-          project.id === projectId ? response.data : project,
+      const response = await updateProjectById(projectId, updates);
+      setState((prev) => ({
+        ...prev,
+        projects: prev.projects.map((project) =>
+          project.id === projectId ? response : project,
         ),
-      );
-      return response.data;
+      }));
+      return response;
     } catch (err) {
-      setError("Không thể cập nhật project. Vui lòng thử lại.");
+      updateState({ error: "Không thể cập nhật project. Vui lòng thử lại." });
       throw err;
     }
   };
 
   const deleteProject = async (projectId) => {
     try {
-      await axios.delete(`${API_URL}/projects/${projectId}`);
-      setProjects((prev) => prev.filter((project) => project.id !== projectId));
+      await deleteProjectById(projectId);
+      setState((prev) => ({
+        ...prev,
+        projects: prev.projects.filter((project) => project.id !== projectId),
+      }));
     } catch (err) {
-      setError("Không thể xóa project. Vui lòng thử lại.");
+      updateState({ error: "Không thể xóa project. Vui lòng thử lại." });
       throw err;
     }
   };

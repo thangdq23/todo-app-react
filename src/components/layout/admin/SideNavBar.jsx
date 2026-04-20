@@ -17,11 +17,11 @@ const SideNavBar = () => {
         <NavItem to="/dashboard" icon="dashboard" end>
           Dashboard
         </NavItem>
-        <NavItem to="/dashboard/task" icon="checklist">
-          Tasks
-        </NavItem>
         <NavItem to="/dashboard/projects" icon="folder_open">
           Projects
+        </NavItem>
+        <NavItem to="/dashboard/task" icon="checklist">
+          Tasks
         </NavItem>
         <NavItem to="/dashboard/calendar" icon="calendar_today">
           Calendar

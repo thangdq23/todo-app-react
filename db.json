@@ -4,152 +4,65 @@
       "email": "a@gmail.com",
       "password": "$2a$10$BCovDN9yZ0wv2Rzvhar0l.5P8BzG6CHvBblHu5NFCYF7apNstpLTm",
       "fullname": "Quyết Thắng",
-      "confirm_password": "111111",
       "id": 1
     },
     {
       "email": "thang@gmail.com",
-      "password": "$2a$10$6xiJ8mnjj5HrVcDkbq9boeqxiNi7zChmQ4Dz0.J65O4CeyJcTO0Sm",
+      "password": "$2a$10$XXZng1Nt6XXKbK4AgKiFjOhx6pOH6mUm2FqtmhAETR8/Hy1FLMayy",
       "fullname": "Dao Quyet Thang",
-      "confirm_password": "111111",
       "id": 2
+    },
+    {
+      "email": "123@gmail.com",
+      "password": "$2a$10$h2Qvup3e2kYNQXf.7bOTw.ExtZV0lLf3Jc1kERMwwe94Kl5JZKELS",
+      "fullname": "quyet thang",
+      "id": 3
     }
   ],
   "tasks": [
     {
-      "title": "hoc taiwind",
-      "description": "hoc tailwin trong vong 2 ngay hoc tailwin trong vong 2 ngay hoc tailwin trong vong 2 ngay hoc tailwin trong vong 2 ngay hoc tailwin trong vong 2 ngay hoc tailwin trong vong 2 ngay hoc tailwin trong vong 2 ngay v v v hoc tailwin trong vong 2 ngay hoc tailwin trong vong 2 ngay hoc tailwin trong vong 2 ngay hoc tailwin trong vong 2 ngay hoc tailwin trong vong 2 ngay hoc tailwin trong vong 2 ngay hoc tailwin trong vong 2 ngay hoc tailwin trong vong 2 ngay hoc tailwin trong vong 2 ngay hoc tailwin trong vong 2 ngay hoc tailwin trong vong 2 ngay hoc tailwin trong vong 2 ngay hoc tailwin trong vong 2 ngay hoc tailwin trong vong 2 ngay hoc tailwin trong vong 2 ngay hoc tailwin trong vong 2 ngay hoc tailwin trong vong 2 ngay hoc tailwin trong vong 2 ngay hoc tailwin trong vong 2 ngay v v v hoc tailwin trong vong 2 ngay hoc tailwin trong vong 2 ngay hoc tailwin trong vong 2 ngay hoc tailwin trong vong 2 ngay hoc tailwin trong vong 2 ngay hoc tailwin trong vong 2 ngay hoc tailwin trong vong 2 ngay hoc tailwin trong vong 2 ngay hoc tailwin trong vong 2 ngay hoc tailwin trong vong 2 ngay hoc tailwin trong vong 2 ngay hoc tailwin trong vong 2 ngay hoc tailwin trong vong 2 ngay hoc tailwin trong vong 2 ngay hoc tailwin trong vong 2 ngay hoc tailwin trong vong 2 ngay hoc tailwin trong vong 2 ngay hoc tailwin trong vong 2 ngay hoc tailwin trong vong 2 ngay v v v hoc tailwin trong vong 2 ngay hoc tailwin trong vong 2 ngay hoc tailwin trong vong 2 ngay hoc tailwin trong vong 2 ngay hoc tailwin trong vong 2 ngay hoc tailwin trong vong 2 ngay hoc tailwin trong vong 2 ngay hoc tailwin trong vong 2 ngay hoc tailwin trong vong 2 ngay hoc tailwin trong vong 2 ngay hoc tailwin trong vong 2 ngay hoc tailwin trong vong 2 ngay hoc tailwin trong vong 2 ngay hoc tailwin trong vong 2 ngay hoc tailwin trong vong 2 ngay hoc tailwin trong vong 2 ngay hoc tailwin trong vong 2 ngay hoc tailwin trong vong 2 ngay hoc tailwin trong vong 2 ngay v v v hoc tailwin trong vong 2 ngay hoc tailwin trong vong 2 ngay hoc tailwin trong vong 2 ngay hoc tailwin trong vong 2 ngay hoc tailwin trong vong 2 ngay hoc tailwin trong vong 2 ngay hoc tailwin trong vong 2 ngay hoc tailwin trong vong 2 ngay hoc tailwin trong vong 2 ngay hoc tailwin trong vong 2 ngay hoc tailwin trong vong 2 ngay hoc tailwin trong vong 2 ngay hoc tailwin trong vong 2 ngay hoc tailwin trong vong 2 ngay hoc tailwin trong vong 2 ngay hoc tailwin trong vong 2 ngay hoc tailwin trong vong 2 ngay hoc tailwin trong vong 2 ngay hoc tailwin trong vong 2 ngay v v v hoc tailwin trong vong 2 ngay hoc tailwin trong vong 2 ngay hoc tailwin trong vong 2 ngay hoc tailwin trong vong 2 ngay hoc tailwin trong vong 2 ngay hoc tailwin trong vong 2 ngay hoc tailwin trong vong 2 ngay hoc tailwin trong vong 2 ngay hoc tailwin trong vong 2 ngay hoc tailwin trong vong 2 ngay hoc tailwin trong vong 2 ngay hoc tailwin trong vong 2 ngay hoc tailwin trong vong 2 ngay hoc tailwin trong vong 2 ngay hoc tailwin trong vong 2 ngay hoc tailwin trong vong 2 ngay hoc tailwin trong vong 2 ngay hoc tailwin trong vong 2 ngay hoc tailwin trong vong 2 ngay v v v hoc tailwin trong vong 2 ngay hoc tailwin trong vong 2 ngay hoc tailwin trong vong 2 ngay hoc tailwin trong vong 2 ngay hoc tailwin trong vong 2 ngay hoc tailwin trong vong 2 ngay hoc tailwin trong vong 2 ngay hoc tailwin trong vong 2 ngay hoc tailwin trong vong 2 ngay hoc tailwin trong vong 2 ngay hoc tailwin trong vong 2 ngay hoc tailwin trong vong 2 ngay",
-      "startDate": "2026-04-15",
-      "endDate": "2026-04-16",
-      "endTime": "20:47",
+      "title": "Ôn luyện 20 từ mới",
+      "description": "Hoàn thành ô luyện 20 từ mới",
+      "startDate": "2026-04-20",
+      "endDate": "2026-04-20",
+      "endTime": "23:00",
       "projectID": 1,
       "priority": "Medium",
       "status": "In Progress",
-      "dueDate": "2026-04-16",
+      "userID": 2,
       "userEmail": "thang@gmail.com",
-      "id": 1
+      "id": 1,
+      "dueDate": "2026-04-20"
     },
     {
-      "title": "Tiếng Anh cơ bản 1",
-      "description": "hoc tieng anh cơ bản",
-      "startDate": "2026-04-16",
-      "endDate": "2026-04-19",
-      "endTime": "23:30",
-      "projectID": 2,
-      "priority": "High",
-      "status": "Done",
-      "dueDate": "2026-04-19",
-      "userEmail": "thang@gmail.com",
-      "id": 2
-    },
-    {
-      "title": "Tiếng anh cơ bản 2",
-      "description": "tiếng anh cơ bản 2",
+      "title": "Thiết kế UI homepage",
+      "description": "CRUD product",
       "startDate": "2026-04-20",
-      "endDate": "2026-04-26",
-      "endTime": "23:30",
+      "endDate": "2026-04-20",
+      "endTime": "22:00",
       "projectID": 2,
       "priority": "High",
-      "status": "To Do",
-      "dueDate": "2026-04-26",
-      "userEmail": "thang@gmail.com",
-      "id": 3
-    },
-    {
-      "title": "Tiếng anh cơ bản 3",
-      "description": "tiếng anh cơ bản 3",
-      "startDate": "2026-04-27",
-      "endDate": "2026-05-03",
-      "endTime": "23:30",
-      "projectID": 2,
-      "priority": "High",
-      "status": "To Do",
-      "dueDate": "2026-05-03",
-      "userEmail": "thang@gmail.com",
-      "id": 4
-    },
-    {
-      "title": "a",
-      "description": "Không có mô tả",
-      "startDate": "2026-04-16",
-      "endDate": "2026-04-17",
-      "endTime": "23:30",
-      "projectID": 4,
-      "priority": "Medium",
       "status": "In Progress",
-      "dueDate": "2026-04-17",
+      "userID": 2,
       "userEmail": "thang@gmail.com",
-      "id": 5
-    },
-    {
-      "title": "b",
-      "description": "Không có mô tả",
-      "startDate": "2026-04-16",
-      "endDate": "2026-04-17",
-      "endTime": "23:30",
-      "projectID": 5,
-      "priority": "Medium",
-      "status": "To Do",
-      "dueDate": "2026-04-17",
-      "userEmail": "thang@gmail.com",
-      "id": 6
-    },
-    {
-      "title": "c",
-      "description": "Không có mô tả",
-      "startDate": "2026-04-16",
-      "endDate": "2026-04-17",
-      "endTime": "23:30",
-      "projectID": 6,
-      "priority": "Medium",
-      "status": "To Do",
-      "dueDate": "2026-04-17",
-      "userEmail": "thang@gmail.com",
-      "id": 7
+      "id": 2,
+      "dueDate": "2026-04-20"
     }
   ],
   "projects": [
     {
-      "name": "Taiwinld",
-      "description": "Hoc thu vien TaiWind trong vong 2 ngay",
+      "name": "Tiếng Anh",
+      "description": "Học Tiếng Anh trong 3 tháng",
       "status": "To do",
       "userEmail": "thang@gmail.com",
       "id": 1
     },
     {
-      "name": "Tiếng Anh",
-      "description": "Học Tiếng Anh trong vòng 3 tháng",
+      "name": "Website bán hàng",
+      "description": "Web bán đồ công nghệ",
       "status": "To do",
       "userEmail": "thang@gmail.com",
       "id": 2
-    },
-    {
-      "name": "tester",
-      "description": "",
-      "status": "To do",
-      "userEmail": "thang@gmail.com",
-      "id": 3
-    },
-    {
-      "name": "a",
-      "description": "",
-      "status": "To do",
-      "userEmail": "thang@gmail.com",
-      "id": 4
-    },
-    {
-      "name": "b",
-      "description": "",
-      "status": "To do",
-      "userEmail": "thang@gmail.com",
-      "id": 5
-    },
-    {
-      "name": "c",
-      "description": "",
-      "status": "To do",
-      "userEmail": "thang@gmail.com",
-      "id": 6
     }
   ]
 }

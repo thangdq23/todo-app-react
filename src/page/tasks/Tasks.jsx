@@ -2,22 +2,9 @@ import React, { useEffect, useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useTasks } from "../../context/useTasks";
 import TaskDetailModal from "./TaskDetailModal";
-import { getTaskDueNotice, dueNoticeClasses } from "../../utils/dueUtils";
-
-const priorityStyles = {
-  High: "bg-error text-on-error px-2.5 py-1 rounded-full text-[10px] font-bold",
-  Medium:
-    "bg-secondary text-on-secondary px-2.5 py-1 rounded-full text-[10px] font-bold",
-  Low: "bg-slate-600 text-white px-2.5 py-1 rounded-full text-[10px] font-bold",
-};
-
-const statusStyles = {
-  "To Do":
-    "bg-primary text-on-primary px-2.5 py-1 rounded-full text-[10px] font-bold",
-  "In Progress":
-    "bg-tertiary text-on-tertiary px-2.5 py-1 rounded-full text-[10px] font-bold",
-  Done: "bg-surface-container-highest text-outline px-2.5 py-1 rounded-full text-[10px] font-bold",
-};
+import TaskForm from "./TaskForm";
+import TaskFilters from "./TaskFilters";
+import TaskCard from "./TaskCard";
 
 const Tasks = () => {
   const navigate = useNavigate();
@@ -226,261 +213,28 @@ const Tasks = () => {
         </div>
 
         {showForm && (
-          <section className="bg-surface-container-low rounded-3xl shadow-lg p-6 space-y-6 border border-outline-variant">
-            <div className="flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
-              <div>
-                <p className="text-sm font-semibold text-on-surface">
-                  Tạo công việc mới
-                </p>
-                <p className="text-xs text-on-surface-variant">
-                  Thông tin nhiệm vụ được lưu nhanh và rõ ràng.
-                </p>
-              </div>
-              <button
-                type="button"
-                className="rounded-full border border-outline-variant px-4 py-2 text-sm font-semibold text-on-surface hover:bg-surface-container-highest"
-                onClick={closeForm}
-              >
-                Hủy
-              </button>
-            </div>
-            <form
-              className="grid gap-4 md:grid-cols-2"
-              onSubmit={handleCreateTask}
-            >
-              <div className="space-y-2 md:col-span-2">
-                <label
-                  className="text-sm font-semibold text-on-surface-variant"
-                  htmlFor="title"
-                >
-                  Tiêu đề
-                </label>
-                <input
-                  id="title"
-                  name="title"
-                  value={formState.title}
-                  onChange={handleChange}
-                  className="w-full rounded-2xl border border-outline-variant bg-surface-container-high px-3 py-3 text-sm focus:ring-1 focus:ring-primary"
-                  placeholder="Enter task title"
-                />
-              </div>
-              <div className="space-y-2">
-                <label
-                  className="text-sm font-semibold text-on-surface-variant"
-                  htmlFor="startDate"
-                >
-                  Ngày bắt đầu
-                </label>
-                <input
-                  id="startDate"
-                  name="startDate"
-                  type="date"
-                  value={formState.startDate}
-                  onChange={handleChange}
-                  className="w-full rounded-2xl border border-outline-variant bg-surface-container-high px-3 py-3 text-sm focus:ring-1 focus:ring-primary"
-                />
-              </div>
-              <div className="space-y-2">
-                <label
-                  className="text-sm font-semibold text-on-surface-variant"
-                  htmlFor="endDate"
-                >
-                  Ngày kết thúc
-                </label>
-                <input
-                  id="endDate"
-                  name="endDate"
-                  type="date"
-                  value={formState.endDate}
-                  onChange={handleChange}
-                  className="w-full rounded-2xl border border-outline-variant bg-surface-container-high px-3 py-3 text-sm focus:ring-1 focus:ring-primary"
-                />
-              </div>
-              <div className="space-y-2">
-                <label
-                  className="text-sm font-semibold text-on-surface-variant"
-                  htmlFor="endTime"
-                >
-                  Giờ kết thúc
-                </label>
-                <input
-                  id="endTime"
-                  name="endTime"
-                  type="time"
-                  value={formState.endTime}
-                  onChange={handleChange}
-                  className="w-full rounded-2xl border border-outline-variant bg-surface-container-high px-3 py-3 text-sm focus:ring-1 focus:ring-primary"
-                />
-              </div>
-              <div className="space-y-2">
-                <label
-                  className="text-sm font-semibold text-on-surface-variant"
-                  htmlFor="projectID"
-                >
-                  Project
-                </label>
-                <select
-                  id="projectID"
-                  name="projectID"
-                  value={formState.projectID}
-                  onChange={handleChange}
-                  className="w-full rounded-2xl border border-outline-variant bg-surface-container-high px-3 py-3 text-sm focus:ring-1 focus:ring-primary"
-                >
-                  {projectOptions.map((project) => (
-                    <option key={project.id} value={project.id}>
-                      {project.name}
-                    </option>
-                  ))}
-                </select>
-              </div>
-              <div className="space-y-2">
-                <label
-                  className="text-sm font-semibold text-on-surface-variant"
-                  htmlFor="priority"
-                >
-                  Priority
-                </label>
-                <select
-                  id="priority"
-                  name="priority"
-                  value={formState.priority}
-                  onChange={handleChange}
-                  className="w-full rounded-2xl border border-outline-variant bg-surface-container-high px-3 py-3 text-sm focus:ring-1 focus:ring-primary"
-                >
-                  <option>High</option>
-                  <option>Medium</option>
-                  <option>Low</option>
-                </select>
-              </div>
-              <div className="space-y-2">
-                <label
-                  className="text-sm font-semibold text-on-surface-variant"
-                  htmlFor="status"
-                >
-                  Status
-                </label>
-                <select
-                  id="status"
-                  name="status"
-                  value={formState.status}
-                  onChange={handleChange}
-                  className="w-full rounded-2xl border border-outline-variant bg-surface-container-high px-3 py-3 text-sm focus:ring-1 focus:ring-primary"
-                >
-                  <option>To Do</option>
-                  <option>In Progress</option>
-                  <option>Done</option>
-                </select>
-              </div>
-              <div className="md:col-span-2 space-y-2">
-                <label
-                  className="text-sm font-semibold text-on-surface-variant"
-                  htmlFor="description"
-                >
-                  Mô tả
-                </label>
-                <textarea
-                  id="description"
-                  name="description"
-                  value={formState.description}
-                  onChange={handleChange}
-                  className="w-full min-h-30 rounded-2xl border border-outline-variant bg-surface-container-high px-3 py-3 text-sm focus:ring-1 focus:ring-primary"
-                  rows="4"
-                  placeholder="Describe the task..."
-                />
-              </div>
-              {formError && (
-                <p className="md:col-span-2 text-sm text-error-container">
-                  {formError}
-                </p>
-              )}
-              <div className="md:col-span-2 flex flex-wrap items-center justify-between gap-3">
-                <button
-                  type="button"
-                  className="rounded-full border border-outline-variant px-4 py-2 text-sm font-semibold hover:bg-surface-container transition-colors"
-                  onClick={closeForm}
-                >
-                  Cancel
-                </button>
-                <button
-                  type="submit"
-                  disabled={saving}
-                  className="rounded-full bg-primary text-on-primary px-6 py-3 text-sm font-semibold shadow-sm hover:bg-primary/90 transition-colors"
-                >
-                  {saving ? "Saving..." : "Save Task"}
-                </button>
-              </div>
-            </form>
-          </section>
+          <TaskForm
+            formState={formState}
+            formError={formError}
+            projectOptions={projectOptions}
+            onChange={handleChange}
+            onCancel={closeForm}
+            onSubmit={handleCreateTask}
+            saving={saving}
+          />
         )}
 
-        <div className="grid grid-cols-12 gap-6">
-          <div className="col-span-12 md:col-span-8 bg-surface-container-low rounded-3xl p-5 grid gap-4 md:grid-cols-2">
-            <div className="space-y-2">
-              <p className="text-[10px] font-black text-outline uppercase tracking-widest">
-                Search tasks
-              </p>
-              <input
-                value={searchTerm}
-                onChange={(event) => setSearchTerm(event.target.value)}
-                placeholder="Tìm theo tiêu đề, mô tả, project..."
-                className="w-full rounded-2xl border border-outline-variant bg-surface-container-high px-3 py-3 text-sm focus:ring-1 focus:ring-primary"
-              />
-            </div>
-            <div className="space-y-2">
-              <p className="text-[10px] font-black text-outline uppercase tracking-widest">
-                Tag / Project
-              </p>
-              <select
-                value={projectFilter}
-                onChange={(event) => setProjectFilter(event.target.value)}
-                className="w-full rounded-2xl border border-outline-variant bg-surface-container-high px-3 py-3 text-sm focus:ring-1 focus:ring-primary"
-              >
-                <option value="All">All</option>
-                {projects.map((project) => (
-                  <option key={project.id} value={project.id}>
-                    {project.name}
-                  </option>
-                ))}
-              </select>
-            </div>
-          </div>
-          <div className="col-span-12 md:col-span-4 bg-surface-container-low rounded-3xl p-5 grid gap-4">
-            <div className="space-y-2">
-              <p className="text-[10px] font-black text-outline uppercase tracking-widest">
-                Filter by Priority
-              </p>
-              <div className="flex flex-wrap gap-2">
-                {["All", "High", "Medium", "Low"].map((level) => (
-                  <button
-                    key={level}
-                    type="button"
-                    onClick={() => setPriorityFilter(level)}
-                    className={`px-3 py-1 rounded-full text-[11px] font-bold border ${priorityFilter === level ? "border-primary bg-primary text-on-primary" : "border-outline-variant bg-surface-container-highest text-on-surface-variant"} transition-colors`}
-                  >
-                    {level}
-                  </button>
-                ))}
-              </div>
-            </div>
-            <div className="space-y-2">
-              <p className="text-[10px] font-black text-outline uppercase tracking-widest">
-                Filter by Status
-              </p>
-              <div className="flex flex-wrap gap-2">
-                {["All", "To Do", "In Progress", "Done"].map((status) => (
-                  <button
-                    key={status}
-                    type="button"
-                    onClick={() => setStatusFilter(status)}
-                    className={`px-3 py-1 rounded-full text-[11px] font-bold border ${statusFilter === status ? "border-primary bg-primary text-on-primary" : "border-outline-variant bg-surface-container-highest text-on-surface-variant"} transition-colors`}
-                  >
-                    {status}
-                  </button>
-                ))}
-              </div>
-            </div>
-          </div>
-        </div>
+        <TaskFilters
+          searchTerm={searchTerm}
+          projectFilter={projectFilter}
+          priorityFilter={priorityFilter}
+          statusFilter={statusFilter}
+          projects={projectOptions}
+          setSearchTerm={setSearchTerm}
+          setProjectFilter={setProjectFilter}
+          setPriorityFilter={setPriorityFilter}
+          setStatusFilter={setStatusFilter}
+        />
 
         {emptyMessage ? (
           <div className="rounded-3xl bg-surface-container-lowest border border-outline-variant p-10 text-center text-on-surface-variant">
@@ -489,94 +243,14 @@ const Tasks = () => {
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
             {filteredTasks.map((task) => (
-              <article
+              <TaskCard
                 key={task.id}
-                onClick={() => handleOpenDetail(task)}
-                className={`group border border-gray-200 rounded-3xl p-6 transition-all duration-300 ${task.status === "Done" ? "bg-surface-dim opacity-90" : "bg-surface-container-lowest hover:shadow-2xl hover:shadow-on-surface/50"}  flex flex-col cursor-pointer`}
-              >
-                {getProjectName(task.projectID) && (
-                  <span className="mb-3 inline-flex items-center rounded-full bg-primary/10 text-primary px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.24em]">
-                    {getProjectName(task.projectID)}
-                  </span>
-                )}
-                <div className="mb-3 flex flex-col gap-3">
-                  <h3
-                    className={`text-2xl font-bold leading-tight ${task.status === "Done" ? "line-through text-outline" : "group-hover:text-primary transition-colors"}`}
-                  >
-                    {task.title}
-                  </h3>
-                  <div className="flex flex-wrap items-center gap-3 text-xs text-on-surface-variant">
-                    <span
-                      className={`${priorityStyles[task.priority] || "bg-surface-container-highest text-outline"}`}
-                    >
-                      {task.priority.toUpperCase()}
-                    </span>
-                    <span
-                      className={`${statusStyles[task.status] || "bg-surface-container-highest text-outline"}`}
-                    >
-                      {task.status}
-                    </span>
-                    {getTaskDueNotice(task) && (
-                      <span
-                        className={
-                          dueNoticeClasses[getTaskDueNotice(task).variant]
-                        }
-                      >
-                        <span className="material-symbols-outlined text-[14px]">
-                          {getTaskDueNotice(task).icon}
-                        </span>
-                        {getTaskDueNotice(task).label}
-                      </span>
-                    )}
-                  </div>
-                </div>
-                <div className="flex flex-wrap items-center gap-3 text-on-surface-variant text-xs mb-4">
-                  <div className="flex items-center gap-2">
-                    <span className="material-symbols-outlined text-sm">
-                      calendar_month
-                    </span>
-                    <span>
-                      {new Date(
-                        task.startDate || task.dueDate,
-                      ).toLocaleDateString()}
-                    </span>
-                    <span>→</span>
-                    <span>
-                      {new Date(
-                        task.endDate || task.dueDate,
-                      ).toLocaleDateString()}
-                    </span>
-                  </div>
-                  <div className="flex items-center gap-2">
-                    <span className="material-symbols-outlined text-sm">
-                      schedule
-                    </span>
-                    <span>{task.endTime || "--"}</span>
-                  </div>
-                </div>
-                <div className="mt-auto flex flex-wrap gap-2">
-                  <button
-                    type="button"
-                    onClick={(event) => {
-                      event.stopPropagation();
-                      handleToggleStatus(task);
-                    }}
-                    className="rounded-full bg-primary/10 text-primary px-3 py-1 text-[11px] font-semibold hover:bg-primary/20 transition-colors"
-                  >
-                    Next status
-                  </button>
-                  <button
-                    type="button"
-                    onClick={(event) => {
-                      event.stopPropagation();
-                      handleDelete(task.id);
-                    }}
-                    className="rounded-full bg-error-container/30 text-red-500 px-3 py-1 text-[11px] font-semibold hover:bg-error-container/60 transition-colors"
-                  >
-                    Delete
-                  </button>
-                </div>
-              </article>
+                task={task}
+                projectName={getProjectName(task.projectID)}
+                onOpenDetail={handleOpenDetail}
+                onToggleStatus={handleToggleStatus}
+                onDelete={handleDelete}
+              />
             ))}
           </div>
         )}

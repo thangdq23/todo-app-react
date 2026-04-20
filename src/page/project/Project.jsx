@@ -1,6 +1,6 @@
 import React, { useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { useTasks } from "../context/useTasks";
+import { useTasks } from "../../context/useTasks";
 
 const computeProjectStatus = (tasks) => {
   if (!tasks || tasks.length === 0) return "To do";

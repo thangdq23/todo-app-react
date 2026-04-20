@@ -10,8 +10,8 @@ import AdminLayout from "../components/layout/admin/AdminLayout";
 import Tasks from "../page/tasks/Tasks";
 import Calendar from "../page/calendar/Calendar";
 import Setting from "../page/settings/Setting";
-import Projects from "../project/Project";
-import ProjectDetails from "../project/ProjectDetails";
+import Projects from "../page/project/Project";
+import ProjectDetails from "../page/project/ProjectDetails";
 
 const routes = createBrowserRouter([
   // client

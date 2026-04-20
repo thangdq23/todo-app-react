@@ -45,9 +45,6 @@ const DashboardTaskCard = ({ task, projectName, onClick }) => {
           <span
             className={`inline-flex items-center gap-2 rounded-full px-3 py-1 text-[11px] font-semibold ${priorityClasses[task.priority] || "bg-surface-container-highest text-outline"}`}
           >
-            <span className="material-symbols-outlined text-[14px]">
-              priority_high
-            </span>
             {task.priority}
           </span>
         </div>

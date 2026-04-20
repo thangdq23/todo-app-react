@@ -30,7 +30,8 @@ const Register = () => {
 
   const onSubmit = async (data) => {
     try {
-      const res = await api.post("/register", data);
+      const { confirm_password, ...userData } = data;
+      const res = await api.post("/register", userData);
       nav("/login");
     } catch (error) {
       toast.error(error.response.data || "Error!");
@@ -38,7 +39,6 @@ const Register = () => {
   };
   return (
     <div className="bg-surface font-body text-on-surface min-h-screen flex items-start justify-center overflow-hidden">
-      {/* <!-- Side Navigation (Mobile Hidden/Web Visible Implementation) --> */}
       <aside className="hidden md:flex flex-col w-64 h-screen fixed left-0 bg-[#f2f4f6] dark:bg-[#111318] z-40">
         <div className="px-8 mb-12">
           <div className="text-lg font-black text-[#0052cc] dark:text-[#4785ff] font-headline mb-1 mt-5">
@@ -61,18 +61,13 @@ const Register = () => {
           </a>
         </nav>
       </aside>
-      {/* <!-- Main Content Canvas --> */}
       <main className="w-full h-full min-h-screen flex items-start justify-center px-4 md:pl-72 relative overflow-y-auto mt-10">
-        {/* <!-- Decorative Background Elements --> */}
         <div className="absolute top-10 right-10 w-96 h-96 bg-primary-fixed opacity-20 blur-[100px] rounded-full -z-10"></div>
         <div className="absolute bottom-10 left-10 w-64 h-64 bg-secondary-fixed opacity-20 blur-[80px] rounded-full -z-10"></div>
 
-        {/* <!-- Registration Card Container --> */}
         <div className="w-full max-w-120 space-y-8">
-          {/* <!-- Glassmorphism Form Card --> */}
           <div className="glass-panel p-8 rounded-xl shadow-[0_32px_32px_8px_rgba(25,28,30,0.04)] space-y-6">
             <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
-              {/* <!-- Full Name --> */}
               <div className="space-y-1.5 flex justify-center text-xl">
                 Tạo tài khoản
               </div>
@@ -103,7 +98,6 @@ const Register = () => {
                   </div>
                 </div>
               </div>
-              {/* <!-- Email --> */}
               <div className="space-y-1.5">
                 <label
                   className="text-sm font-semibold text-on-surface-variant ml-1"
@@ -131,7 +125,6 @@ const Register = () => {
                   </div>
                 </div>
               </div>
-              {/* <!-- Password --> */}
               <div className="space-y-1.5">
                 <label
                   className="text-sm font-semibold text-on-surface-variant ml-1"
@@ -159,7 +152,6 @@ const Register = () => {
                   </div>
                 </div>
               </div>
-              {/* <!-- Confirm Password --> */}
               <div className="space-y-1.5">
                 <label
                   className="text-sm font-semibold text-on-surface-variant ml-1"
@@ -187,7 +179,6 @@ const Register = () => {
                   </div>
                 </div>
               </div>
-              {/* <!-- CTA Button --> */}
               <button
                 className="w-full kinetic-gradient text-on-primary font-semibold py-4 rounded-full shadow-lg hover:shadow-primary/20 transition-all duration-300 transform hover:-translate-y-0.5 active:translate-y-0 "
                 type="submit"
@@ -195,10 +186,7 @@ const Register = () => {
                 Đăng ký ngay
               </button>
             </form>
-
-            {/* <!-- Google Sign-up --> */}
           </div>
-          {/* <!-- Footer Link --> */}
           <p className="text-center text-on-surface-variant text-sm">
             Đã có tài khoản?
             <Link
@@ -210,7 +198,6 @@ const Register = () => {
           </p>
         </div>
       </main>
-      {/* <!-- Footer Shell Implementation --> */}
     </div>
   );
 };
