@@ -10,9 +10,7 @@ const Header = () => {
   };
   return (
     <header className="fixed top-0 ml-64 w-[calc(100%-16rem)] h-20 flex justify-between items-center px-12 py-4 bg-slate-50/80 dark:bg-slate-900/80 backdrop-blur-xl z-10">
-      <div className="flex items-center flex-1 max-w-md">
-        
-      </div>
+      <div className="flex items-center flex-1 max-w-md"></div>
       <div className="flex items-center gap-6">
         <div className="flex items-center gap-4">
           <button className="relative p-2 text-on-surface-variant hover:opacity-80 transition-opacity">
@@ -25,12 +23,6 @@ const Header = () => {
             <span className="absolute top-2 right-2 w-2 h-2 bg-tertiary rounded-full border-2 border-surface"></span>
           </button>
           <div className="flex items-center gap-3 pl-4 border-l border-slate-200">
-            <div className="text-right hidden sm:block">
-              <p className="text-xs font-bold leading-none">Julian Thorne</p>
-              <p className="text-[10px] text-on-surface-variant">
-                Editorial Lead
-              </p>
-            </div>
             <img
               alt="User profile picture"
               className="w-10 h-10 rounded-full object-cover"

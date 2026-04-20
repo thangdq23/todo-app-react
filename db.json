@@ -47,6 +47,72 @@
       "userEmail": "thang@gmail.com",
       "id": 2,
       "dueDate": "2026-04-20"
+    },
+    {
+      "title": "Ôn luyện 40 từ mới",
+      "description": "ôn luyện 40 từ",
+      "startDate": "2026-04-21",
+      "endDate": "2026-04-21",
+      "endTime": "22:14",
+      "projectID": 1,
+      "priority": "Medium",
+      "status": "To Do",
+      "userID": 2,
+      "userEmail": "thang@gmail.com",
+      "id": 3
+    },
+    {
+      "title": "Code API sản phẩm",
+      "description": "CRUD product",
+      "startDate": "2026-04-21",
+      "endDate": "2026-04-22",
+      "endTime": "23:16",
+      "projectID": 2,
+      "priority": "Medium",
+      "status": "To Do",
+      "userID": 2,
+      "userEmail": "thang@gmail.com",
+      "id": 4
+    },
+    {
+      "title": "Tìm hiểu nghiệp vụ",
+      "description": "Tìm hiểu nghiệp vụ web bán hàng",
+      "startDate": "2026-04-18",
+      "endDate": "2026-04-19",
+      "endTime": "20:17",
+      "projectID": 2,
+      "priority": "High",
+      "status": "Done",
+      "userID": 2,
+      "userEmail": "thang@gmail.com",
+      "id": 5,
+      "dueDate": "2026-04-19"
+    },
+    {
+      "title": "Ôn luyện 10 từ mới",
+      "description": "ôn luyện 10 từ",
+      "startDate": "2026-04-19",
+      "endDate": "2026-04-19",
+      "endTime": "20:18",
+      "projectID": 1,
+      "priority": "High",
+      "status": "Done",
+      "userID": 2,
+      "userEmail": "thang@gmail.com",
+      "id": 6
+    },
+    {
+      "title": "Làm chức năng login",
+      "description": "Auth bằng JWT",
+      "startDate": "2026-04-27",
+      "endDate": "2026-04-29",
+      "endTime": "23:21",
+      "projectID": 2,
+      "priority": "Medium",
+      "status": "To Do",
+      "userID": 2,
+      "userEmail": "thang@gmail.com",
+      "id": 7
     }
   ],
   "projects": [

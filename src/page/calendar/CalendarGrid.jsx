@@ -5,7 +5,7 @@ import CalendarDayCell from "./CalendarDayCell";
 const CalendarGrid = ({ days, tasks = [], onDayClick }) => {
   const taskMap = useMemo(() => {
     return tasks.reduce((acc, task) => {
-      const key = task.dueDate;
+      const key = task.endDate || task.dueDate;
       if (!acc[key]) acc[key] = [];
       acc[key].push(task);
       return acc;

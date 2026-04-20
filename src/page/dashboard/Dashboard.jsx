@@ -30,8 +30,9 @@ const Dashboard = () => {
       (task) => task.status === "In Progress",
     ).length;
     const currentMonthTasks = tasks.filter((task) => {
-      if (!task.dueDate) return false;
-      const date = new Date(task.dueDate);
+      const dateStr = task.endDate || task.dueDate;
+      if (!dateStr) return false;
+      const date = new Date(dateStr);
       return (
         date.getMonth() === today.getMonth() &&
         date.getFullYear() === today.getFullYear()
@@ -48,7 +49,8 @@ const Dashboard = () => {
 
   const todaysTasks = useMemo(() => {
     const dueToday = tasks.filter(
-      (task) => task.dueDate === todayKey && task.status !== "Done",
+      (task) =>
+        (task.endDate || task.dueDate) === todayKey && task.status !== "Done",
     );
 
     const activeTasks = tasks.filter((task) => task.status !== "Done");
@@ -72,8 +74,9 @@ const Dashboard = () => {
       return {
         key: formatDateKey(day),
         label: day.toLocaleDateString("en-US", { weekday: "short" }),
-        count: tasks.filter((task) => task.dueDate === formatDateKey(day))
-          .length,
+        count: tasks.filter(
+          (task) => (task.endDate || task.dueDate) === formatDateKey(day),
+        ).length,
       };
     });
   }, [tasks, today]);
@@ -146,9 +149,6 @@ const Dashboard = () => {
           <span className="uppercase text-xs font-bold tracking-[0.2em] text-primary mb-2 block">
             Daily Briefing
           </span>
-          <h2 className="text-4xl font-extrabold font-headline tracking-tight text-on-surface">
-            Chào mừng trở lại! Hôm nay bạn có thể hoàn thành những việc gì?
-          </h2>
         </section>
 
         <div className="grid grid-cols-12 gap-8">

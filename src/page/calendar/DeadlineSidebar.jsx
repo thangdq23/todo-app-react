@@ -15,17 +15,25 @@ const badgeClass = (variant) => {
 
 const DeadlineSidebar = ({ tasks = [] }) => {
   const upcomingTasks = tasks
-    .filter((task) => task.status !== "Done" && task.dueDate)
+    .filter((task) => task.status !== "Done" && (task.endDate || task.dueDate))
     .sort((a, b) => {
+      // Sort by due date first (soonest deadline first)
+      const dateA = a.endDate || a.dueDate;
+      const dateB = b.endDate || b.dueDate;
+      const dateDiff = dateA.localeCompare(dateB);
+      if (dateDiff !== 0) return dateDiff;
+
+      // Then by status
       const statusOrder = { "In Progress": 0, "To Do": 1, Done: 2 };
-      const priorityOrder = { High: 0, Medium: 1, Low: 2 };
       const statusDiff =
         (statusOrder[a.status] || 3) - (statusOrder[b.status] || 3);
       if (statusDiff !== 0) return statusDiff;
+
+      // Finally by priority
+      const priorityOrder = { High: 0, Medium: 1, Low: 2 };
       const priorityDiff =
         (priorityOrder[a.priority] || 3) - (priorityOrder[b.priority] || 3);
-      if (priorityDiff !== 0) return priorityDiff;
-      return a.dueDate.localeCompare(b.dueDate);
+      return priorityDiff;
     })
     .slice(0, 5);
 
@@ -54,9 +62,8 @@ const DeadlineSidebar = ({ tasks = [] }) => {
                   >
                     {task.status}
                   </span>
-                  
                   <span className="text-xs text-slate-400 font-medium">
-                    {task.dueDate}
+                    {task.endDate || task.dueDate}
                   </span>
                 </div>
                 <h4 className="text-sm font-bold text-on-surface mb-2">

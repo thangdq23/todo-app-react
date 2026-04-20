@@ -69,7 +69,10 @@ const CalendarModal = ({
     : "";
 
   const tasksForDate = useMemo(
-    () => tasks.filter((task) => task.dueDate === selectedDateKey),
+    () =>
+      tasks.filter(
+        (task) => (task.endDate || task.dueDate) === selectedDateKey,
+      ),
     [tasks, selectedDateKey],
   );
 
